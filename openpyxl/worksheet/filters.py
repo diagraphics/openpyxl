@@ -155,15 +155,15 @@ class CustomFilterValueDescriptor(Convertible):
     Excel uses wildcards for string matching
     """
 
-    pattern = re.compile(r"\d+|^\*.+|^.+\*$")
+    pattern = re.compile(r"\d+|^\*.+|^.+\*$|^ $")
     expected_type = float
 
     def __set__(self, instance, value):
         if isinstance(value, str):
             m = self.pattern.match(value)
             if not m:
-                raise ValueError("Value must be either numerical or a string containing a wildcard")
-            if "*" in value:
+                raise ValueError("Value must be either numerical, a single space, or a string containing a wildcard")
+            if "*" in value or value == " ":
                 self.expected_type = str
         super().__set__(instance, value)
 
